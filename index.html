@@ -1,0 +1,174 @@
+<!DOCTYPE html><html><head><style>.unselectable {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.item {
+  height: 100px;
+}</style>
+		 <script>var __VAR_JSON__ = {
+  "name": "o(*≧▽≦)ツ┏━┓",
+  "dependencies": {
+    "react": "https://cdn.bootcss.com/react/16.13.1/umd/react.production.min.js",
+    "react-dom": "https://cdn.bootcss.com/react-dom/16.13.1/umd/react-dom.production.min.js",
+    "axios": "https://cdn.bootcss.com/axios/0.19.2/axios.min.js"
+  },
+  "types": {
+    "react": "https://www.unpkg.com/@types/react/index.d.ts",
+    "react-dom": "https://www.unpkg.com/@types/react-dom/index.d.ts",
+    "csstype": "https://www.unpkg.com/csstype/index.d.ts",
+    "prop-types": "https://www.unpkg.com/@types/prop-types/index.d.ts",
+    "axios": "https://unpkg.com/axios/index.d.ts"
+  }
+}
+;</script>
+		 <!-- for typescript target: AMD -->
+<script src="https://cdn.bootcss.com/require.js/2.3.6/require.min.js"></script>
+
+</head><body><div id="root"></div>
+
+		 <script>;(function(){
+	// 1. config requirejs
+const packages = __VAR_JSON__.dependencies
+const oldLoad = requirejs.load
+requirejs.load = function (context, id, url) {
+  if (id in packages) {
+    url = packages[id]
+  }
+  return oldLoad.call(requirejs, context, id, url)
+}
+
+// 2. declarations config
+// please remove it before sandbox exports.
+// api docs:https://github.com/Saber2pr/editor/blob/master/docs/script.md
+if (top !== self) {
+  if (!top._finished) {
+    top.LOADING.init()
+    console.log('--- wait for types fetching... ---')
+    const info = m => `<span style="background:lightskyblue">${m}</span>`
+    const types = __VAR_JSON__.types
+    const names = Object.keys(types)
+    const count = names.length
+    let index = 0
+    Promise.all(names.map(name => top.api_addModuleDeclaration(types[name], name)
+      .then(() =>
+        console.log(`type(${++index}/${count}): ${info(`[${name}]`)} fetched`))))
+      .then(() => {
+        console.log(`--- types fetching finished. ---`)
+        top.LOADING.destroy()
+      })
+    top._finished = true
+  }
+}
+
+// 3. enjoy it!
+console.log(__VAR_JSON__.name, new Date().toLocaleString())
+
+	})();</script><script>var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+define("index",["require", "exports", "react", "react-dom"], function (require, exports, react_1, react_dom_1) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    react_1 = __importStar(react_1);
+    react_dom_1 = __importDefault(react_dom_1);
+    var Scroll = function (_a) {
+        var children = _a.children, _b = _a.height, height = _b === void 0 ? 300 : _b, _c = _a.barWidth, barWidth = _c === void 0 ? 20 : _c, _d = _a.barHeight, barHeight = _d === void 0 ? 50 : _d, _e = _a.width, width = _e === void 0 ? 300 : _e, barClassName = _a.barClassName, _f = _a.barStyle, barStyle = _f === void 0 ? {} : _f, barTrackClassName = _a.barTrackClassName, _g = _a.barTrackStyle, barTrackStyle = _g === void 0 ? {} : _g, contentClassName = _a.contentClassName, _h = _a.contentStyle, contentStyle = _h === void 0 ? {} : _h;
+        var scrollBarRef = react_1.useRef();
+        var scrollContentRef = react_1.useRef();
+        react_1.useEffect(function () {
+            registerScroll({
+                scrollContent: scrollContentRef.current,
+                scrollBar: scrollBarRef.current,
+                scrollBarHeight: barHeight,
+                clientHeight: height
+            });
+        }, []);
+        return react_1.default.createElement("div", { style: { display: 'flex' } },
+            react_1.default.createElement("div", { className: contentClassName, ref: scrollContentRef, style: __assign({ width: width + 'px', height: height + 'px', overflow: 'hidden' }, contentStyle) }, children),
+            react_1.default.createElement("div", { className: barTrackClassName, style: __assign({ position: 'relative', width: barWidth + 'px', backgroundColor: 'black' }, barTrackStyle) },
+                react_1.default.createElement("div", { className: barClassName, ref: scrollBarRef, style: __assign({ width: '100%', height: barHeight + 'px', position: 'absolute', top: 0, left: 0, backgroundColor: 'green' }, barStyle) })));
+    };
+    function registerScroll(_a) {
+        var scrollBarHeight = _a.scrollBarHeight, clientHeight = _a.clientHeight, scrollBar = _a.scrollBar, scrollContent = _a.scrollContent;
+        var isScrolling = false;
+        var previousClientY = 0;
+        var barMoveLength = clientHeight - scrollBarHeight;
+        var contentMoveLength = scrollContent.scrollHeight - clientHeight;
+        scrollBar.addEventListener("mousedown", function (e) {
+            isScrolling = true;
+            previousClientY = e.clientY;
+            document.body.classList.add("unselectable");
+        });
+        document.addEventListener("mouseup", function () {
+            isScrolling = false;
+            document.body.classList.remove("unselectable");
+        });
+        document.addEventListener("mousemove", function (e) {
+            if (isScrolling) {
+                scrollTo((e.clientY - previousClientY) * contentMoveLength / barMoveLength);
+                previousClientY = e.clientY;
+            }
+        });
+        if (navigator.userAgent.indexOf("Firefox") < 0) {
+            scrollContent.addEventListener("mousewheel", function (e) {
+                scrollTo(-e['wheelDelta']);
+            });
+        }
+        else {
+            scrollContent.addEventListener("DOMMouseScroll", function (e) {
+                scrollTo(e['detail'] * 30);
+            });
+        }
+        function scrollTo(top) {
+            top += scrollContent.scrollTop;
+            if (top < 0) {
+                scrollContent.scrollTop = 0;
+            }
+            else if (top > contentMoveLength) {
+                scrollContent.scrollTop = contentMoveLength;
+            }
+            else {
+                scrollContent.scrollTop = top;
+            }
+            var barDownDistance = scrollContent.scrollTop * barMoveLength / contentMoveLength;
+            scrollBar.style.top = barDownDistance + "px";
+        }
+    }
+    var App = function () {
+        return react_1.default.createElement(Scroll, { width: 200, height: 400, barStyle: { borderRadius: '0.5rem', backgroundColor: 'lightblue' }, barTrackStyle: { backgroundColor: 'grey' }, contentStyle: { backgroundColor: '#c1dbc7' } },
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"),
+            react_1.default.createElement("div", { className: "item" }, "233"));
+    };
+    react_dom_1.default.render(react_1.default.createElement(App, null), document.getElementById('root'));
+});
+;require(["index"])</script></body></html>
